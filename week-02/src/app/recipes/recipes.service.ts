@@ -5,6 +5,8 @@ import { Recipe } from './recipe.model';
   providedIn: 'root'
 })
 export class RecipesService {
+  // deleteRecipe(id: string) {
+  // }
 
   private recipes: Recipe[] = [
     {
@@ -32,6 +34,13 @@ export class RecipesService {
     return [...this.recipes];
   }
   getRecipe(recipeId: string) {
-    return [this.recipes];
+    return {
+      ...this.recipes.find(recipes=>recipes.id === recipeId)
+    }
+  }
+  deleteRecipe(recipeId: string){
+    this.recipes = this.recipes.filter(recipes => {
+      return recipes.id !== recipeId;
+    });
   }
 }

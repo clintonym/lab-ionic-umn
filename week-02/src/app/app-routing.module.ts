@@ -12,7 +12,7 @@ const routes: Routes = [
         loadChildren: './recipes/recipes.module#RecipesPageModule'
       },
       {
-        path: 'recipeId',
+        path: ':recipeId',
         loadChildren: './recipes/recipe-detail/recipe-detail.module#RecipeDetailPageModule'
       }
     ]
