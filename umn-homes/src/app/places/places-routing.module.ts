@@ -29,7 +29,7 @@ const routes: Routes = [
                     },
                     {
                         path: 'new',
-                        loadChildren: './offers/new-offer.module#newOfferPageModule'
+                        loadChildren: './offers/new-offer/new-offer.module#NewOfferPageModule'
                     },
                     {
                         path: 'edit/:placeId',
@@ -37,7 +37,7 @@ const routes: Routes = [
                     },
                     {
                         path: ':placeId',
-                        loadChildren: './offers/offer-bookings/offer.bookings.module#OfferBookingsPageModule'
+                        loadChildren: './offers/offer-bookings/offer-bookings.module#OfferBookingsPageModule'
                     }
                 ]
             },
@@ -52,7 +52,8 @@ const routes: Routes = [
         path: '',
         redirectTo: '/places/tabs/discover',
         pathMatch: 'full'
-    }
+    },  { path: 'edit-offer', loadChildren: './offers/edit-offer/edit-offer.module#EditOfferPageModule' }
+
 ];
 
 @NgModule({

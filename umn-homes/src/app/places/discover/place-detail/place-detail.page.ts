@@ -14,7 +14,7 @@ export class PlaceDetailPage implements OnInit {
 
   ngOnInit() {
   }
-
+  
   goBack(){
     // this.router.navigateByUrl('/places/tabs/discover');
     this.navCtrl.navigateBack('/places/tabs/discover');
