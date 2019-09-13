@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
-
+import { Router, ActivatedRoute } from '@angular/router';
+import { NavController, ModalController, LoadingController, ActionSheetController } from '@ionic/angular';
+import { Place } from '../../place.model';
+import { PlacesService } from '../../places.service';
+import { CreateBookingComponent } from 'src/app/bookings/create-booking/create-booking.component';
 
 @Component({
   selector: 'app-place-detail',
@@ -10,12 +12,60 @@ import { NavController } from '@ionic/angular';
 })
 export class PlaceDetailPage implements OnInit {
 
-  constructor(private router: Router, private navCtrl: NavController) { }
-
+  place: Place;
+  constructor( 
+    private navCtrl: NavController,
+    private route: ActivatedRoute,
+    private placesService: PlacesService,
+    private modalCtrl: ModalController,
+    private actionSheetCtrl: ActionSheetController
+    ) { }
+    
   ngOnInit() {
+    this.route.paramMap.subscribe(paramMap => {
+      if(!paramMap.has('placeId')) {
+        this.navCtrl.navigateBack('/places/tabs/discover');
+        return;
+      }
+      this.place = this.placesService.getPlace(paramMap.get('placeId'));
+    });
+  }
+
+  async onBookPlace() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Book Place',
+      buttons: [{
+        text: 'Book with Random Date',
+        handler: () => {
+          this.modalCtrl
+          .create({
+            component: CreateBookingComponent,
+            componentProps: { selectedPlace: this.place }
+          })
+          .then(modalEl => {
+            modalEl.present();
+            return modalEl.onDidDismiss();
+          })
+          .then(resultData => {
+            console.log(resultData.data, resultData.role);
+            if(resultData.role === 'confirm') {
+              console.log('BOOKED');
+            }
+          });
+        }
+      },
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+      }
+      }]
+    });
+    await actionSheet.present();
   }
   
-  goBack(){
+  goBack() {
     // this.router.navigateByUrl('/places/tabs/discover');
     this.navCtrl.navigateBack('/places/tabs/discover');
   }
