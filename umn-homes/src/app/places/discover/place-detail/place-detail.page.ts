@@ -31,39 +31,85 @@ export class PlaceDetailPage implements OnInit {
     });
   }
 
-  async onBookPlace() {
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Book Place',
-      buttons: [{
-        text: 'Book with Random Date',
-        handler: () => {
-          this.modalCtrl
-          .create({
-            component: CreateBookingComponent,
-            componentProps: { selectedPlace: this.place }
-          })
-          .then(modalEl => {
-            modalEl.present();
-            return modalEl.onDidDismiss();
-          })
-          .then(resultData => {
-            console.log(resultData.data, resultData.role);
-            if(resultData.role === 'confirm') {
-              console.log('BOOKED');
-            }
-          });
+  onBookPlace() {
+    this.actionSheetCtrl.create({
+      header: 'Choose an Action',
+      buttons: [
+        {
+          text: 'Select Date',
+          handler: () => {
+            this.openBookingModal('select');
+          }
+        },
+        {
+          text: 'Random Date',
+          handler: () => {
+            this.openBookingModal('random');
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
         }
-      },
-      {
-        text: 'Cancel',
-        role: 'cancel',
-        handler: () => {
-          console.log('Cancel clicked');
-      }
-      }]
+      ]
+    })
+    .then(actionSheetEl => {
+      actionSheetEl.present();
     });
-    await actionSheet.present();
   }
+
+  openBookingModal(mode: 'select' | 'random') {
+    console.log(mode);
+    this.modalCtrl
+    .create({
+      component: CreateBookingComponent,
+      componentProps: { selectedPlace: this.place }
+    })
+    .then(modalEl => {
+      modalEl.present();
+      return modalEl.onDidDismiss();
+    })
+    .then(resultData => {
+      console.log(resultData.data, resultData.role);
+      if(resultData.role === 'confirm') {
+        console.log('BOOKED');
+      }
+    });
+  }
+
+  // async onBookPlace() {
+  //   const actionSheet = await this.actionSheetCtrl.create({
+  //     header: 'Book Place',
+  //     buttons: [{
+  //       text: 'Book with Random Date',
+  //       handler: () => {
+  //         this.modalCtrl
+  //         .create({
+  //           component: CreateBookingComponent,
+  //           componentProps: { selectedPlace: this.place }
+  //         })
+  //         .then(modalEl => {
+  //           modalEl.present();
+  //           return modalEl.onDidDismiss();
+  //         })
+  //         .then(resultData => {
+  //           console.log(resultData.data, resultData.role);
+  //           if(resultData.role === 'confirm') {
+  //             console.log('BOOKED');
+  //           }
+  //         });
+  //       }
+  //     },
+  //     {
+  //       text: 'Cancel',
+  //       role: 'cancel',
+  //       handler: () => {
+  //         console.log('Cancel clicked');
+  //     }
+  //     }]
+  //   });
+  //   await actionSheet.present();
+  // }
   
   goBack() {
     // this.router.navigateByUrl('/places/tabs/discover');
