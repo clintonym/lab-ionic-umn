@@ -12,21 +12,27 @@ export class PlacesService {
       'Gading Apartment',
       '2BR, Luas dan Cozy',
       'https://origin.pegipegi.com/jalan/images/pict1L/Y8/Y953168/Y953168051.jpg',
-      100000000
+      100000000,
+      new Date('2019-01-01'),
+      new Date('2020-12-31')
     ),
     new Place(
       'p2',
       'Serpong Apartment',
       'Apartemen Romantis',
       'https://www.serpong-garden-apartment.com/wp-content/uploads/sites/47/2019/04/serpong-garden-front-view.original.jpg',
-      125000000
+      125000000,
+      new Date('2019-01-01'),
+      new Date('2020-12-31')
     ),
     new Place(
       'p3',
       'BSD Apartment',
       'Apartemen Murah',
       'http://1.bp.blogspot.com/-tW_sDjrvzNA/Ueam7BtLbMI/AAAAAAAAAEc/lj1rW3TdaaM/s1600/casa-de-parco-apartment-bsd-city.jpg',
-      50000000
+      50000000,
+      new Date('2019-01-01'),
+      new Date('2020-12-31')
     ),
   ];
 
