@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Place } from 'src/app/places/place.model';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { BookingService } from '../booking.service';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-create-booking',
@@ -13,6 +13,7 @@ export class CreateBookingComponent implements OnInit {
 
   @Input() selectedPlace: Place;
   @Input() selectedMode: 'select' | 'random';
+  //@ViewChild('f') form: NgForm;
   form: FormGroup;
   startDate: string;
   endDate: string;
