@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 import { google } from '@agm/core/services/google-maps-types';
+import { Plugins, Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-map-modal',
@@ -16,7 +17,8 @@ export class MapModalComponent implements OnInit, AfterViewInit {
   
   constructor(
     private modalCtrl: ModalController,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private alertCtrl: AlertController,
   ) { }
 
   ngOnInit() {}
@@ -31,8 +33,17 @@ export class MapModalComponent implements OnInit, AfterViewInit {
       googleMaps.event.addListener(map, 'idle', () => {
         this.renderer.addClass(mapElement, 'visible');
       });
-      const marker = new googleMaps.Marker({ position: { lat: this.lat, lng: this.lng }, map });
-      console.log(marker);
+
+      this.getLocation().then(loc => {
+        if(!loc) {
+          const marker = new googleMaps.Marker({ position: { lat: this.lat, lng: this.lng }, map });
+        } else {
+          const marker = new googleMaps.Marker({ position: { lat: loc.latitude, lng: loc.longitude }, map })
+          map.panTo(new googleMaps.LatLng(loc.latitude, loc.longitude));
+        }
+        console.log(loc.latitude + " - " + loc.longitude);
+      });
+      
       map.addListener('click', event => {
         const selectedCoords = {
           lat: event.latLng.lat(),
@@ -62,7 +73,7 @@ export class MapModalComponent implements OnInit, AfterViewInit {
     }
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.mapsAPIKey}&callback=initMap`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.mapsAPIKey}`;
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
@@ -75,5 +86,24 @@ export class MapModalComponent implements OnInit, AfterViewInit {
         }
       };
     });
+  }
+
+  async presentAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Alert',
+      subHeader: 'Failed',
+      message: 'Could not get user location',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  async getLocation() {
+    if(!Capacitor.isPluginAvailable('Geolocation')) {
+      this.presentAlert();
+      return null;
+    }
+    const coordinates = await Plugins.Geolocation.getCurrentPosition();
+    return coordinates.coords;
   }
 }
